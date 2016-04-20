@@ -80,6 +80,7 @@
     <Link>
       <AdditionalDependencies>sfw.lib;ws2_32.lib;TankBattle-net.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)libs\sfw\$(Configuration);$(SolutionDir)$(Configuration)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>Debug</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -133,9 +134,11 @@
     <ClCompile Include="..\libs\dyad\dyad.c" />
     <ClCompile Include="AIControl.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Output.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AIControl.h" />
+    <ClInclude Include="Output.h" />
     <ClInclude Include="TankBattleHeader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

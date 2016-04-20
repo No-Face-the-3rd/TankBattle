@@ -5,6 +5,7 @@
 #include "sfwdraw.h"
 
 #include "AIControl.h"
+#include "Output.h"
 #undef NONE     // sfw defines NONE as one of its colors; we won't be needing that
 
 using std::stringstream;
@@ -99,8 +100,8 @@ int main(int argc, char** argv)
 			HAL.update(*state, sfw::getDeltaTime());
             // diagnostic report of current state
             stringstream debugStrings;
-            debugStrings << *state;
-            debugStrings << "Tacticool Report:\n";
+           // debugStrings << *state;
+          /*  debugStrings << "Tacticool Report:\n";
             for (int i = 0; i < state->tacticoolCount; ++i)
             {
                 debugStrings << state->tacticoolData[i].playerID << "\n    ";
@@ -115,15 +116,7 @@ int main(int argc, char** argv)
                 }
 
                 debugStrings << "\ninSight: " << (state->tacticoolData[i].inSight ? "true" : "false") << "\n";
-            }
-
-			if (HAL.curState.tacticoolCount)
-				debugStrings << HAL.curState.tacticoolData[0].lastKnownTankForward[0] << ", \n" << HAL.curState.tacticoolData[0].lastKnownTankForward[1] << ", \n" << HAL.curState.tacticoolData[0].lastKnownTankForward[2] << std::endl;
-
-            sfw::drawString(font, debugStrings.str().c_str(), 0, WINDOW_HEIGHT, 15, 15);
-
-
-
+            }*/
             // prepare message
             tankNet::TankBattleCommand ex;
             ex.msg = tankNet::TankBattleMessage::GONE;
@@ -131,6 +124,20 @@ int main(int argc, char** argv)
             ex.cannonMove = tankNet::CannonMovementOptions::HALT;
 
 			ex = HAL.update(*state,sfw::getDeltaTime());
+
+			debugStrings << HAL << ex << PI/2.0f;
+
+			float tmpDir[3];
+			getDir(HAL.curState.position, HAL.targetLoc, tmpDir);
+			float tmp = getAngle(HAL.curState.forward, tmpDir);
+
+			debugStrings << std::endl << tmpDir << std::endl << tmp;
+
+
+            sfw::drawString(font, debugStrings.str().c_str(), 0, WINDOW_HEIGHT, 15, 15);
+
+
+
             // poll for input
             if (inputPressed())
             {
@@ -139,13 +146,13 @@ int main(int argc, char** argv)
                     sfw::getKey(TANK_BACK) ? tankNet::TankMovementOptions::BACK :
                     sfw::getKey(TANK_LEFT) ? tankNet::TankMovementOptions::LEFT :
                     sfw::getKey(TANK_RIGT) ? tankNet::TankMovementOptions::RIGHT :
-                    tankNet::TankMovementOptions::HALT;
+					ex.tankMove;
 
                 ex.cannonMove = sfw::getKey(CANN_LEFT) ? tankNet::CannonMovementOptions::LEFT :
                     sfw::getKey(CANN_RIGT) ? tankNet::CannonMovementOptions::RIGHT :
-                    tankNet::CannonMovementOptions::HALT;
+                    ex.cannonMove;
 
-                ex.fireWish = sfw::getKey(TANK_FIRE);
+                ex.fireWish = sfw::getKey(TANK_FIRE) ? sfw::getKey(TANK_FIRE) : ex.fireWish;
 
                 // game actions
                 if (sfw::getKey(GAME_QUIT))

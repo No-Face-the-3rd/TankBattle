@@ -31,7 +31,7 @@ namespace tankNet
 		// HACK: discard this transmission
 		// develop a better messaging protocol
 		if (msg->messageLength <= 0 ||
-            msg->messageLength < sizeof(TankBattleStateData))
+            msg->messageLength != sizeof(TankBattleStateData))
 			return;
 
         // TODO: RTCs
@@ -164,7 +164,7 @@ namespace tankNet
         return adjMat;
     }
 
-	std::ostream& operator<<(std::ostream &os, TankBattleStateData const &state)
+	/*std::ostream& operator<<(std::ostream &os, TankBattleStateData const &state)
 	{
 		os << "Player ID: " << state.playerID << "\n";
 		os << "Health: " << state.currentHealth << "\n";
@@ -184,5 +184,5 @@ namespace tankNet
 		os << "Tacticool Count: " << state.tacticoolCount << "\n";
 
 		return os;
-	}
+	}*/
 }

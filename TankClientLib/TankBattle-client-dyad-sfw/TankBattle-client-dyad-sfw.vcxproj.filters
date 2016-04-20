@@ -24,12 +24,18 @@
     <ClCompile Include="AIControl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Output.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TankBattleHeader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AIControl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Output.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

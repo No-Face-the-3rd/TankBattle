@@ -4,6 +4,11 @@
 
 #include <math.h>
 
+#undef PI
+#define PI 3.14159265358979323846264338327950288419716939937510f
+#define HALFPI PI/2.0f
+
+
 tankNet::TankBattleCommand AI::update(tankNet::TankBattleStateData state, float deltaTime)
 {
 	tankNet::TankBattleCommand tmp;
@@ -24,7 +29,7 @@ tankNet::TankBattleCommand AI::update(tankNet::TankBattleStateData state, float 
 		for (int i = 0; i < 3; i++)
 		{
 			targetLoc[i] = curState.tacticoolData[0].lastKnownPosition[i];
-			aimTarget[i] = curState.tacticoolData[0].lastKnownPosition[i] + curState.tacticoolData[0].lastKnownTankForward[i];
+			aimTarget[i] = curState.tacticoolData[0].lastKnownPosition[i];// + curState.tacticoolData[0].lastKnownTankForward[i];
 		}
 	else
 		for (int i = 0; i < 3; i++)
@@ -41,9 +46,9 @@ int AI::checkTurn()
 	float tmp = getAngle(curState.forward, tmpDir);
 
 	float buffer = 0.2f;
-	if ((tmp <= PI / 2.0f && tmp >= buffer) || (tmp >= PI + buffer && tmp <= 3.0f * PI / 2.0f))
+	if ((tmp <= HALFPI && tmp >= buffer) || (tmp >= PI + buffer && tmp < 3.0f * HALFPI))
 		return 1;
-	else if ((tmp >= PI / 2.0f && tmp <= PI - buffer) || (tmp >= 3.0f * PI / 2.0f && tmp <= 2.0f * PI - buffer))
+	else if ((tmp > HALFPI && tmp <= PI - buffer) || (tmp >= 3.0f * HALFPI && tmp <= 2.0f * PI - buffer))
 		return 2;
 	else
 		return 0;
@@ -58,11 +63,10 @@ int AI::checkForward()
 	for (int i = 0; i < 3; i++)
 		tmpDir[i] = targetLoc[i] - curState.position[i];
 
-	
 
-	if ((tmp <= PI / 2.0f || tmp >= 3.0f * PI / 2.0f) && mag(tmpDir) > 4.0f)
+	if ((tmp <= HALFPI || tmp >= 3.0f * HALFPI) && mag(tmpDir) > 4.0f)
 		return 1;
-	else if((tmp >= PI / 2.0f && tmp <= 3.0f * PI / 2.0f) && mag(tmpDir) > 4.0f)
+	else if((tmp > HALFPI && tmp < 3.0f * HALFPI) && mag(tmpDir) > 4.0f)
 		return 2;
 	else
 		return 0;	
@@ -72,11 +76,15 @@ void AI::checkMotion(tankNet::TankBattleCommand &a)
 {
 	if (turning && forward)
 	{
+		if (toggleTurnBuffer++ > 105)
+		{
+			toggleTurn = !toggleTurn;
+			toggleTurnBuffer = 0;
+		}
 		if(toggleTurn)
 			a.tankMove = turning == 1 ? tankNet::TankMovementOptions::LEFT : tankNet::TankMovementOptions::RIGHT;
 		else
 			a.tankMove = forward == 1 ? tankNet::TankMovementOptions::FWRD : tankNet::TankMovementOptions::BACK;
-		toggleTurn = !toggleTurn;
 	}
 	else if (turning)
 		a.tankMove = turning == 1 ? tankNet::TankMovementOptions::LEFT : tankNet::TankMovementOptions::RIGHT;
@@ -96,11 +104,11 @@ void AI::controlTurret(tankNet::TankBattleCommand & a)
 	getDir(curState.position, aimTarget, tmpDir);
 	float tmp = getAngle(curState.cannonForward, tmpDir);
 
-	float buffer = 0.2f;
-	if ((tmp >= PI + buffer))
-		a.cannonMove = tankNet::CannonMovementOptions::LEFT;
-	else if ((tmp <= PI - buffer))
+	float buffer = 0.20f;
+	if ((tmp >= PI && tmp <= 2.0f  * PI - buffer))
 		a.cannonMove = tankNet::CannonMovementOptions::RIGHT;
+	else if ((tmp < PI && tmp >= buffer))
+		a.cannonMove = tankNet::CannonMovementOptions::LEFT;
 	else
 		a.cannonMove = tankNet::CannonMovementOptions::HALT;
 }

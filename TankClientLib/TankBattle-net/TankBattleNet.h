@@ -38,5 +38,5 @@ namespace tankNet
     // Returns true if tankNet has recieved at last one valid state update from the server.
     bool isProvisioned();
 
-	std::ostream& operator<<(std::ostream &os, TankBattleStateData const &state);
+	//std::ostream& operator<<(std::ostream &os, TankBattleStateData const &state);
 }

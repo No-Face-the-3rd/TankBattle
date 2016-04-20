@@ -13,6 +13,7 @@ struct AI
 	int turning;
 	int forward;
 	bool toggleTurn;
+	int toggleTurnBuffer;
 	int target;
 	tankNet::TankBattleStateData lastState, curState;
 

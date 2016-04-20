@@ -84,8 +84,7 @@ public class NetGameMode : MonoBehaviour
 
             var percepts = netPlayerPawn.GetComponent<TankPercepts>();
 
-            int packetSize = DataUtils.SizeOf<TankBattleStateData>() +
-                             DataUtils.SizeOf<TankTacticalInfo>() * percepts.reconInfo.Count;
+            int packetSize = DataUtils.SizeOf<TankBattleStateData>();
 
             var stateMsg = new TankBattleStateData();
             stateMsg.messageLength  = packetSize;
@@ -112,8 +111,7 @@ public class NetGameMode : MonoBehaviour
             }
 
             // pack reconnaissance
-            MemoryStream packetStream = new MemoryStream(DataUtils.SizeOf<TankBattleStateData>() +
-                                  DataUtils.SizeOf<TankTacticalInfo>() * percepts.reconInfo.Count);
+            MemoryStream packetStream = new MemoryStream(DataUtils.SizeOf<TankBattleStateData>());
 
             packetStream.Write(DataUtils.GetBytes(stateMsg), 0, DataUtils.SizeOf<TankBattleStateData>());
             foreach (var reconRecord in percepts.reconInfo)
