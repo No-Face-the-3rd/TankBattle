@@ -68,7 +68,7 @@ namespace UnityGame.Tanks
             newPlayerController.isActive = true;
             newPlayerController.pid = m_PlayerControllers.Count - 1;
             newPlayerController.m_PlayerColor = m_PlayerColors[m_ActivePlayerCount - 1];
-            newPlayerController.m_SpawnPoint = m_SpawnPoints[newPlayerController.pid];
+            newPlayerController.m_SpawnPoint = m_SpawnPoints[m_ActivePlayerCount - 1];
 
             return newPlayerController;
         }
@@ -120,13 +120,14 @@ namespace UnityGame.Tanks
 
         private IEnumerator RoundWaiting ()
         {
-            // Display diagnostic
-            m_MessageText.text = "WAITING FOR " + (m_MinimumPlayerCount - m_ActivePlayerCount) + " PLAYERS";
             m_RoundText.text = "";
 
             // Wait for enough players to connnect
             while (m_ActivePlayerCount < m_MinimumPlayerCount)
+            {
+                m_MessageText.text = "WAITING FOR " + (m_MinimumPlayerCount - m_ActivePlayerCount) + " PLAYERS";
                 yield return null;
+            }
         }
         private IEnumerator RoundStarting ()
         {

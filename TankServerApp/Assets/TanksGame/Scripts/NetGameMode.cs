@@ -140,7 +140,10 @@ public class NetGameMode : MonoBehaviour
 
         // if null, we are at the max player count
         if (netPlayer.playerController == null)
+        {
+            Debug.LogWarning("Server is at max capacity.");
             return null;
+        }
 
         netPlayer.playerController.isActive = true;
 

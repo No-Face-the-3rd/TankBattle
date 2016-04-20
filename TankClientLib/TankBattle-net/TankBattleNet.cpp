@@ -116,7 +116,7 @@ namespace tankNet
 
     void send(TankBattleCommand command)
     {
-        if (!isProvisioned)
+        if (!isConnected)
             return;
 
         const int msgSize = sizeof(TankBattleCommand);
