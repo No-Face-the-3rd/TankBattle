@@ -4,7 +4,7 @@ namespace tankNet
 {
 	enum class TankBattleMessage
 	{
-		NONE,
+		GONE,
 		JOIN,
 		GAME,
 		QUIT

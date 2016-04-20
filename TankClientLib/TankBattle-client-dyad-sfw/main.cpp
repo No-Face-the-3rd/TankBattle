@@ -3,6 +3,8 @@
 
 #include "TankBattleNet.h"
 #include "sfwdraw.h"
+
+#include "AIControl.h"
 #undef NONE     // sfw defines NONE as one of its colors; we won't be needing that
 
 using std::stringstream;
@@ -40,6 +42,8 @@ bool inputPressed()
 int main(int argc, char** argv)
 {
     char * serverIPAddress = "";
+	//char *serverIPAddress = "10.15.22.46";
+
 
     // handle console arguments
     if (argc > 2)
@@ -76,12 +80,14 @@ int main(int argc, char** argv)
     {
         auto serverData = tankNet::recieve();
 
+		AI HAL;
         // initialize SFW and assets
         sfw::initContext(WINDOW_WIDTH, WINDOW_HEIGHT, "TankController");
         unsigned font = sfw::loadTextureMap("./res/fontmap.png", 16, 16);
 
         while (sfw::stepContext() && tankNet::isConnected() && tankNet::isProvisioned())
         {
+			
             // check TCP streams via dyad
             tankNet::update();
             if (tankNet::isConnected() == false)
@@ -90,7 +96,7 @@ int main(int argc, char** argv)
             }
 
             tankNet::TankBattleStateData * state = tankNet::recieve();
-
+			HAL.update(*state, sfw::getDeltaTime());
             // diagnostic report of current state
             stringstream debugStrings;
             debugStrings << *state;
@@ -111,14 +117,20 @@ int main(int argc, char** argv)
                 debugStrings << "\ninSight: " << (state->tacticoolData[i].inSight ? "true" : "false") << "\n";
             }
 
+			if (HAL.curState.tacticoolCount)
+				debugStrings << HAL.curState.tacticoolData[0].lastKnownTankForward[0] << ", \n" << HAL.curState.tacticoolData[0].lastKnownTankForward[1] << ", \n" << HAL.curState.tacticoolData[0].lastKnownTankForward[2] << std::endl;
+
             sfw::drawString(font, debugStrings.str().c_str(), 0, WINDOW_HEIGHT, 15, 15);
+
+
 
             // prepare message
             tankNet::TankBattleCommand ex;
-            ex.msg = tankNet::TankBattleMessage::NONE;
+            ex.msg = tankNet::TankBattleMessage::GONE;
             ex.tankMove = tankNet::TankMovementOptions::HALT;
             ex.cannonMove = tankNet::CannonMovementOptions::HALT;
 
+			ex = HAL.update(*state,sfw::getDeltaTime());
             // poll for input
             if (inputPressed())
             {
