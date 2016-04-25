@@ -42,9 +42,9 @@ bool inputPressed()
 
 int main(int argc, char** argv)
 {
-    char * serverIPAddress = "";
-	//char *serverIPAddress = "10.15.22.46";
-
+    //char *serverIPAddress = "";
+	char *serverIPAddress = "10.15.22.46";
+	//char *serverIPAddress = "10.15.22.138";
 
     // handle console arguments
     if (argc > 2)
@@ -97,7 +97,6 @@ int main(int argc, char** argv)
             }
 
             tankNet::TankBattleStateData * state = tankNet::recieve();
-			HAL.update(*state, sfw::getDeltaTime());
             // diagnostic report of current state
             stringstream debugStrings;
            // debugStrings << *state;
@@ -119,7 +118,7 @@ int main(int argc, char** argv)
             }*/
             // prepare message
             tankNet::TankBattleCommand ex;
-            ex.msg = tankNet::TankBattleMessage::GONE;
+            ex.msg = tankNet::TankBattleMessage::NONE;
             ex.tankMove = tankNet::TankMovementOptions::HALT;
             ex.cannonMove = tankNet::CannonMovementOptions::HALT;
 

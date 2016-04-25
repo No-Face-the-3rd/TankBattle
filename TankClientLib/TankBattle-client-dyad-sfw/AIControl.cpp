@@ -3,7 +3,7 @@
 #include "AIControl.h"
 
 #include <math.h>
-
+#undef NONE
 #undef PI
 #define PI 3.14159265358979323846264338327950288419716939937510f
 #define HALFPI PI/2.0f
@@ -16,7 +16,7 @@ tankNet::TankBattleCommand AI::update(tankNet::TankBattleStateData state, float 
 	curState = state;
 	locResets();
 	tmp.fireWish = 0;
-	tmp.msg = tankNet::TankBattleMessage::GONE;
+	tmp.msg = tankNet::TankBattleMessage::NONE;
 
 
 	checkMotion(tmp);
@@ -92,7 +92,7 @@ void AI::checkMotion(tankNet::TankBattleCommand &a)
 			a.tankMove = turning == 1 ? tankNet::TankMovementOptions::LEFT : tankNet::TankMovementOptions::RIGHT;
 		else
 			a.tankMove = forward == 1 ? tankNet::TankMovementOptions::FWRD : tankNet::TankMovementOptions::BACK;
-		toggleTurn = (++toggleTurn) % 3;
+		toggleTurn = (++toggleTurn) % 2;
 	}
 	else if (turning)
 		a.tankMove = turning == 1 ? tankNet::TankMovementOptions::LEFT : tankNet::TankMovementOptions::RIGHT;
