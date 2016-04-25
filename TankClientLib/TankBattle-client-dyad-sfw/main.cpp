@@ -127,12 +127,6 @@ int main(int argc, char** argv)
 
 			debugStrings << HAL << ex << PI/2.0f;
 
-			float tmpDir[3];
-			getDir(HAL.curState.position, HAL.targetLoc, tmpDir);
-			float tmp = getAngle(HAL.curState.forward, tmpDir);
-
-			debugStrings << std::endl << tmpDir << std::endl << tmp;
-
 
             sfw::drawString(font, debugStrings.str().c_str(), 0, WINDOW_HEIGHT, 15, 15);
 

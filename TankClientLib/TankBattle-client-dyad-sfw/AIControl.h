@@ -6,23 +6,30 @@
 
 #include "TankBattleNet.h"
 #include "sfwdraw.h"
+#include <vector>
 
 struct AI
 {
-	float targetLoc[3], aimTarget[3];
+	float targetLoc[3], aimTarget[3], startLoc[3];
 	int turning;
 	int forward;
-	bool toggleTurn;
-	int toggleTurnBuffer;
+	int toggleTurn;
 	int target;
 	tankNet::TankBattleStateData lastState, curState;
+	bool started = false;
+	std::vector<float> lastSeenTime;
 
+	float tmpOut;
 
 	tankNet::TankBattleCommand update(tankNet::TankBattleStateData state, float deltaTime);
 	int checkTurn();
 	int checkForward();
 	void checkMotion(tankNet::TankBattleCommand &a);
 	void controlTurret(tankNet::TankBattleCommand &a);
+	void checkFire(tankNet::TankBattleCommand &a);
+	void locResets();
+	void targetMove(const float &dt);
+
 };
 
 float getAngle(float dir[3]);
