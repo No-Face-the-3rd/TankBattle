@@ -135,6 +135,7 @@ namespace UnityGame.Tanks
         private void FixedUpdate()
         {
             BroadcastEvents();
+            //Debug.Log(m_PlayerNumber + "::" + m_FireTransform.parent.forward);
         }
     }
 }

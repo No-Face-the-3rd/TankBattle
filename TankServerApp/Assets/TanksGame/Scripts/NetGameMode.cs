@@ -68,7 +68,14 @@ public class NetGameMode : MonoBehaviour
         }
 
         // remove events processed
-        connectionSocket.events.RemoveRange(0, readCount);
+        try
+        {
+            connectionSocket.events.RemoveRange(0, readCount);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning(ex.InnerException + ex.StackTrace);
+        }
         connectionSocket.paused = false;
     }
     void UpdateClients()

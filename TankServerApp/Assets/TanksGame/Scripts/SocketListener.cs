@@ -23,7 +23,7 @@ public class StateObject
 {
     public Socket remoteSocket = null;                // socket to player
 
-    public const int BufferSize = 1024;             // maximum amount of data buffered for a user
+    public const int BufferSize = 4096;             // maximum amount of data buffered for a user
     public int bytesRead = 0;                       // bytes currently in the buffer
 
     public byte[] buffer = new byte[BufferSize];    // access to buffer
@@ -90,6 +90,24 @@ public class SocketListener
     private bool _paused;
 
     public List<SocketEvent> events { get; private set; }
+    public void AddNetworkEvent(SocketEvent newEvent)
+    {
+        try
+        {
+            events.Add(newEvent);
+        }
+        catch (Exception ex)
+        {
+            if (ex is IndexOutOfRangeException)
+            {
+                Debug.LogWarning("Index was out of range while adding an event to the queue.");
+            }
+            else
+            {
+                Debug.LogWarning("UNKNOWN WARNING:" + ex.InnerException + "\n" + ex.StackTrace);
+            }
+        }
+    }
 
     public SocketListener()
     {
@@ -140,8 +158,21 @@ public class SocketListener
 
         players[handler] = netPlayer;
 
-        events.Add(new SocketEvent(new SocketEventArgs(SocketEventArgs.SocketEventType.ACCEPT, netPlayer), null));
-
+        try
+        {
+            events.Add(new SocketEvent(new SocketEventArgs(SocketEventArgs.SocketEventType.ACCEPT, netPlayer), null));
+        }
+        catch (Exception ex)
+        {
+            if (ex is IndexOutOfRangeException)
+            {
+                Debug.LogWarning("Index was out of range while adding an event to the queue.");
+            }
+            else
+            {
+                Debug.LogWarning("UNKNOWN WARNING:" + ex.InnerException + "\n" + ex.StackTrace);
+            }
+        }
         Debug.Log("Setting up to recieve from " + endpoint.Address.ToString());
 
         listener.BeginAccept(new AsyncCallback(AcceptCallback), listener);
@@ -188,8 +219,21 @@ public class SocketListener
                     // have we recieved the full message?
                     if (state.bytesRead >= header.messageLength)
                     {
-                        events.Add(new SocketEvent(new SocketEventArgs(SocketEventArgs.SocketEventType.READ, players[handler]), (byte[])state.buffer.Clone()));
-
+                        try
+                        {
+                            events.Add(new SocketEvent(new SocketEventArgs(SocketEventArgs.SocketEventType.READ, players[handler]), (byte[])state.buffer.Clone()));
+                        }
+                        catch (Exception ex)
+                        {
+                            if (ex is IndexOutOfRangeException)
+                            {
+                                Debug.LogWarning("Index was out of range while adding an event to the queue.");
+                            }
+                            else
+                            {
+                                Debug.LogWarning("UNKNOWN WARNING:" + ex.InnerException + "\n" + ex.StackTrace);
+                            }
+                        }
                         // subtract the number of bytes needed to be processed
                         state.bytesRead -= header.messageLength;
 

@@ -103,6 +103,11 @@ public class TankPercepts : MonoBehaviour
             {
                 Debug.DrawLine(transform.position, enemy.lastKnownPosition, Color.red);
             }
+
+            Gizmos.color = Color.red;
+
+            Gizmos.DrawCube(enemy.lastKnownPosition + enemy.lastKnownTankForward, Vector3.one / 2f);
+            Gizmos.DrawCube(enemy.lastKnownPosition + enemy.lastKnownCannonForward, Vector3.one / 4f);
         }
     }
 }
