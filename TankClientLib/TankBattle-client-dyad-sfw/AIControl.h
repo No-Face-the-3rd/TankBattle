@@ -18,6 +18,7 @@ struct AI
 	tankNet::TankBattleStateData lastState, curState;
 	bool started = false;
 	std::vector<float> lastSeenTime;
+	float searchRad;
 
 	float tmpOut;
 

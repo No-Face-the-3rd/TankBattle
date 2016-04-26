@@ -23,25 +23,22 @@ tankNet::TankBattleCommand AI::update(tankNet::TankBattleStateData state, float 
 	controlTurret(tmp);
 	checkFire(tmp);
 
+	targetMove(deltaTime);
+
 	turning = checkTurn();
 	forward = checkForward();
 
 	if (curState.tacticoolCount)
 	{
-		for (int i = 0; i < curState.tacticoolCount; i++)
-		{
-			if (i + 1 >= lastSeenTime.size())
-				lastSeenTime.push_back(0.0f);
-			if (curState.tacticoolData[i].inSight)
-				lastSeenTime.at(i) = 0.0f;
-			else
-				lastSeenTime.at(i) += deltaTime;
-		}
-		for (int i = 0; i < 3; i++)
-		{
-			targetLoc[i] = curState.tacticoolData[0].lastKnownPosition[i];// +10 * curState.tacticoolData[0].lastKnownTankForward[i];
-			aimTarget[i] = curState.tacticoolData[0].lastKnownPosition[i];// +10 * curState.tacticoolData[0].lastKnownTankForward[i];
-		}
+		//for (int i = 0; i < curState.tacticoolCount; i++)
+		//{
+
+		//}
+		//for (int i = 0; i < 3; i++)
+		//{
+		//	targetLoc[i] = curState.tacticoolData[0].lastKnownPosition[i];// +10 * curState.tacticoolData[0].lastKnownTankForward[i];
+		//	aimTarget[i] = curState.tacticoolData[0].lastKnownPosition[i];// +10 * curState.tacticoolData[0].lastKnownTankForward[i];
+		//}
 	}
 	else
 		started = false;
@@ -87,7 +84,6 @@ void AI::checkMotion(tankNet::TankBattleCommand &a)
 {
 	if (turning && forward)
 	{
-
 		if(toggleTurn)
 			a.tankMove = turning == 1 ? tankNet::TankMovementOptions::LEFT : tankNet::TankMovementOptions::RIGHT;
 		else
@@ -128,7 +124,7 @@ void AI::checkFire(tankNet::TankBattleCommand &a)
 		float tmpVec[3];
 		for (int i = 0; i < 3; i++)
 			tmpVec[i] = aimTarget[i] - curState.position[i];
-		if (mag(tmpVec) >= 15.0f && mag(tmpVec) <= 17.0f)
+		if (mag(tmpVec) >= 8.0f && mag(tmpVec) <= 20.0f)
 			a.fireWish = 1;
 		else
 			a.fireWish = 0;
@@ -144,11 +140,54 @@ void AI::locResets()
 		started = true;
 		for (int i = 0; i < lastSeenTime.size(); i++)
 			lastSeenTime.pop_back();
+		target = -1;
 	}
 }
 
 void AI::targetMove(const float & dt)
 {
+	if (curState.tacticoolCount)
+	{
+		if (target >= 0)
+		{
+			targetLoc[0] = curState.tacticoolData[target].lastKnownPosition[0];
+			targetLoc[2] = curState.tacticoolData[target].lastKnownPosition[2];
+		}
+		for (int i = 0; i < curState.tacticoolCount; i++)
+		{
+			if (i + 1 >= lastSeenTime.size())
+				lastSeenTime.push_back(0.0f);
+			float tmp[3] = { curState.tacticoolData[i].lastKnownPosition[0] - curState.position[0],0.0f,curState.tacticoolData[i].lastKnownPosition[2] - curState.position[2] };
+			float tmpB[3] = { targetLoc[0] - curState.position[0],0.0f,targetLoc[2] - curState.position[2] };
+			if (!curState.tacticoolData[i].isAlive && target == i)
+				tmpB[0] = tmpB[2] = 10000.0f;
+			if (curState.tacticoolData[i].inSight)
+			{
+				lastSeenTime.at(i) = -0.1f;
+				if (mag(tmp) <= mag(tmpB) && curState.tacticoolData[i].isAlive)
+				{
+					target = i;
+					targetLoc[0] = curState.tacticoolData[i].lastKnownPosition[0];
+					targetLoc[2] = curState.tacticoolData[i].lastKnownPosition[2];
+
+				}
+			}
+			else
+				lastSeenTime.at(i) += dt;
+		}
+		for (int i = 0; i < lastSeenTime.size(); i++)
+		{
+			if (lastSeenTime.at(i) <= 0.0f)
+			{
+
+			}
+		}
+	}
+	else
+	{
+
+	}
+
 
 }
 

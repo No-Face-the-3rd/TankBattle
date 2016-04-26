@@ -24,7 +24,7 @@ const char CANN_RIGT = 'E';
 const char GAME_QUIT = 'L';
 
 const int WINDOW_HEIGHT = 800;
-const int WINDOW_WIDTH = 400;
+const int WINDOW_WIDTH = 600;
 
 // Polls all printable characters for a key press
 // Returns true if a key press was detected, otherwise returns false
@@ -43,8 +43,9 @@ bool inputPressed()
 int main(int argc, char** argv)
 {
     //char *serverIPAddress = "";
-	char *serverIPAddress = "10.15.22.46";
+	//char *serverIPAddress = "10.15.22.46";
 	//char *serverIPAddress = "10.15.22.138";
+	char *serverIPAddress = "10.15.22.73";
 
     // handle console arguments
     if (argc > 2)
@@ -124,7 +125,7 @@ int main(int argc, char** argv)
 
 			ex = HAL.update(*state,sfw::getDeltaTime());
 
-			debugStrings << HAL << ex << PI/2.0f;
+			debugStrings << HAL << ex;
 
 
             sfw::drawString(font, debugStrings.str().c_str(), 0, WINDOW_HEIGHT, 15, 15);
