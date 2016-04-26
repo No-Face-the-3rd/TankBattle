@@ -16,20 +16,24 @@ struct AI
 	int toggleTurn;
 	int target;
 	tankNet::TankBattleStateData lastState, curState;
+	tankNet::TankBattleCommand lastCom, curCom;
 	bool started = false;
-	std::vector<float> lastSeenTime;
+	std::vector<float> lastSeenTime, lastPosUpdateTime, lastCanUpdateTime;
 	float searchRad;
 
 	float tmpOut;
 
-	tankNet::TankBattleCommand update(tankNet::TankBattleStateData state, float deltaTime);
+	void update(tankNet::TankBattleStateData state, float deltaTime);
 	int checkTurn();
 	int checkForward();
-	void checkMotion(tankNet::TankBattleCommand &a);
-	void controlTurret(tankNet::TankBattleCommand &a);
-	void checkFire(tankNet::TankBattleCommand &a);
+	void checkMotion();
+	void controlTurret();
+	void checkFire();
 	void locResets();
-	void targetMove(const float &dt);
+	void comReset();
+	void checkSeen(const float &dt);
+	void checkUpdated(const float &dt);
+	void targetLocMove();
 
 };
 

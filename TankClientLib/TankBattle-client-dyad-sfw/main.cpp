@@ -43,9 +43,10 @@ bool inputPressed()
 int main(int argc, char** argv)
 {
     //char *serverIPAddress = "";
-	//char *serverIPAddress = "10.15.22.46";
-	//char *serverIPAddress = "10.15.22.138";
-	char *serverIPAddress = "10.15.22.73";
+	//char *serverIPAddress = "10.15.22.46"; //tung
+	//char *serverIPAddress = "10.15.22.138"; //connor
+	//char *serverIPAddress = "10.15.22.73"; //screen
+	char *serverIPAddress = "10.15.22.31"; //?
 
     // handle console arguments
     if (argc > 2)
@@ -123,8 +124,9 @@ int main(int argc, char** argv)
             ex.tankMove = tankNet::TankMovementOptions::HALT;
             ex.cannonMove = tankNet::CannonMovementOptions::HALT;
 
-			ex = HAL.update(*state,sfw::getDeltaTime());
-
+			HAL.update(*state,sfw::getDeltaTime());
+			ex = HAL.curCom;
+			
 			debugStrings << HAL << ex;
 
 
