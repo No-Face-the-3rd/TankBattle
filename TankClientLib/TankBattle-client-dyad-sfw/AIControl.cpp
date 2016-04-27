@@ -40,7 +40,7 @@ int AI::checkTurn()
 	getDir(curState.position, targetLoc, tmpDir);
 	float tmp = getAngle(curState.forward, tmpDir);
 
-	float buffer = 0.10f;
+	float buffer = 0.20f;
 	if ((tmp <= HALFPI && tmp >= buffer) || (tmp >= PI + buffer && tmp < 3.0f * HALFPI))
 		return 1;
 	else if ((tmp > HALFPI && tmp <= PI - buffer) || (tmp >= 3.0f * HALFPI && tmp <= 2.0f * PI - buffer))
@@ -59,7 +59,7 @@ int AI::checkForward()
 		tmpDir[i] = targetLoc[i] - curState.position[i];
 	tmpDir[1] = 0.0f;
 
-	if (mag(tmpDir) > 10.0f)
+	if (mag(tmpDir) > 14.0f)
 	{
 		if ((tmp <= HALFPI || tmp >= 3.0f * HALFPI))
 			return 1;
@@ -69,9 +69,9 @@ int AI::checkForward()
 	else
 	{
 		if ((tmp <= HALFPI || tmp >= 3.0f * HALFPI))
-			return 1;
-		else if ((tmp > HALFPI && tmp < 3.0f * HALFPI))
 			return 2;
+		else if ((tmp > HALFPI && tmp < 3.0f * HALFPI))
+			return 1;
 	}
 
 	return 0;	
@@ -85,12 +85,18 @@ void AI::checkMotion()
 			curCom.tankMove = turning == 1 ? tankNet::TankMovementOptions::LEFT : tankNet::TankMovementOptions::RIGHT;
 		else
 			curCom.tankMove = forward == 1 ? tankNet::TankMovementOptions::FWRD : tankNet::TankMovementOptions::BACK;
-		toggleTurn = (++toggleTurn) % 2;
+		toggleTurn = (++toggleTurn) % 25;
 	}
 	else if (turning)
+	{
 		curCom.tankMove = turning == 1 ? tankNet::TankMovementOptions::LEFT : tankNet::TankMovementOptions::RIGHT;
+		toggleTurn = 0;
+	}
 	else if (forward)
+	{
 		curCom.tankMove = forward == 1 ? tankNet::TankMovementOptions::FWRD : tankNet::TankMovementOptions::BACK;
+		toggleTurn = 0;
+	}
 	else
 	{
 		curCom.tankMove = tankNet::TankMovementOptions::HALT;
@@ -105,7 +111,7 @@ void AI::controlTurret()
 	getDir(curState.position, aimTarget, tmpDir);
 	float tmp = getAngle(curState.cannonForward, tmpDir);
 
-	float buffer = 0.10f;
+	float buffer = 0.20f;
 	if ((tmp >= PI && tmp <= 2.0f  * PI - buffer))
 		curCom.cannonMove = tankNet::CannonMovementOptions::RIGHT;
 	else if ((tmp < PI && tmp >= buffer))
@@ -121,7 +127,7 @@ void AI::checkFire()
 		float tmpVec[3];
 		for (int i = 0; i < 3; i++)
 			tmpVec[i] = aimTarget[i] - curState.position[i];
-		if (mag(tmpVec) >= 6.0f && mag(tmpVec) <= 20.0f)
+		if (mag(tmpVec) >= 4.0f && mag(tmpVec) <= 20.0f)
 			curCom.fireWish = 1;
 		else
 			curCom.fireWish = 0;
@@ -238,6 +244,7 @@ void AI::targetLocMove()
 		else
 			for (int i = 0; i < 3; i++)
 				targetLoc[i] = aimTarget[i] = curState.position[i];
+		targetLoc[1] = aimTarget[1] = 0.0f;
 	}
 
 	switch (state)
