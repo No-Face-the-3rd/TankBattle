@@ -47,6 +47,7 @@ int main(int argc, char** argv)
 	//char *serverIPAddress = "10.15.22.138"; //connor
 	//char *serverIPAddress = "10.15.22.73"; //screen
 	char *serverIPAddress = "10.15.22.31"; //?
+	//char *serverIPAddress = "10.15.22.10"; //matt
 
     // handle console arguments
     if (argc > 2)

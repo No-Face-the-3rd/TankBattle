@@ -59,7 +59,7 @@ int AI::checkForward()
 		tmpDir[i] = targetLoc[i] - curState.position[i];
 	tmpDir[1] = 0.0f;
 
-	if (mag(tmpDir) > 14.0f)
+	if (mag(tmpDir) > 10.0f)
 	{
 		if ((tmp <= HALFPI || tmp >= 3.0f * HALFPI))
 			return 1;
@@ -85,7 +85,7 @@ void AI::checkMotion()
 			curCom.tankMove = turning == 1 ? tankNet::TankMovementOptions::LEFT : tankNet::TankMovementOptions::RIGHT;
 		else
 			curCom.tankMove = forward == 1 ? tankNet::TankMovementOptions::FWRD : tankNet::TankMovementOptions::BACK;
-		toggleTurn = (++toggleTurn) % 25;
+		toggleTurn = (++toggleTurn) % 2;
 	}
 	else if (turning)
 	{
