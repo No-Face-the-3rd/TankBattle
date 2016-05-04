@@ -1,6 +1,8 @@
 #include <iostream>
 #include <sstream>
 
+#include <time.h>
+
 #include "TankBattleNet.h"
 #include "sfwdraw.h"
 
@@ -48,6 +50,9 @@ int main(int argc, char** argv)
 	//char *serverIPAddress = "10.15.22.73"; //screen
 	char *serverIPAddress = "10.15.22.31"; //?
 	//char *serverIPAddress = "10.15.22.10"; //matt
+	//char *serverIPAddress = "10.15.22.76"; //terry tmp
+
+	srand(time(NULL));
 
     // handle console arguments
     if (argc > 2)

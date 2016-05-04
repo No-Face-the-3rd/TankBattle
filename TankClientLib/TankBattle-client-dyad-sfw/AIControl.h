@@ -8,7 +8,7 @@
 #include "sfwdraw.h"
 #include <vector>
 
-enum state
+enum moveState
 {
 	ABYSS,START, SEARCH, ACTIVE, FIND
 };
@@ -24,7 +24,9 @@ struct AI
 	tankNet::TankBattleCommand lastCom, curCom;
 	bool started = false;
 	std::vector<float> lastSeenTime, lastPosUpdateTime, lastCanUpdateTime;
-	state state = ABYSS;
+	moveState moveState = ABYSS, prevMoveState = ABYSS;
+	bool clockwise = false;
+	float stickTime, formerStickTime;
 
 	float tmpOut;
 
@@ -42,6 +44,7 @@ struct AI
 	void search(float start[3]);
 	void aim();
 	void avoid();
+	void unstick(const float &dt);
 };
 
 float getAngle(float dir[3]);

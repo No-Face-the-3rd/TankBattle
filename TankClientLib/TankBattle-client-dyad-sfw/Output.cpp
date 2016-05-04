@@ -8,6 +8,7 @@ std::ostream &operator<<(std::ostream &os, const AI &a)
 	os << (float*)a.aimTarget << std::endl;
 	os << "Turning: " << a.turning << " Move: " << a.forward << std::endl;
 	os << "ToggleTurn: " << a.toggleTurn << " Target Ind: " << a.target << std::endl;
+	os << "stickTime: " << a.stickTime << std::endl;
 	os << a.curState << std::endl;
 	return os;
 }
