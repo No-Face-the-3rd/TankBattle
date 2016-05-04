@@ -138,7 +138,8 @@ void AI::checkFire()
 
 void AI::locResets()
 {
-	if (!started && moveState == ABYSS)
+	//if (!started && moveState == ABYSS)
+	if ((!curState.tacticoolCount && lastState.tacticoolCount) || (!started && moveState == ABYSS))
 	{
 		for (int i = 0; i < lastSeenTime.size(); i++)
 			lastSeenTime.pop_back();
@@ -253,7 +254,6 @@ void AI::targetLocMove()
 				targetLoc[i] = aimTarget[i] = curState.position[i];
 		targetLoc[1] = aimTarget[1] = 0.0f;
 	}
-
 		switch (moveState)
 		{
 		case SEARCH:
@@ -268,6 +268,7 @@ void AI::targetLocMove()
 				moveState = ACTIVE;
 			break;
 		case ACTIVE:
+
 			break;
 		case FIND:
 			break;
@@ -347,8 +348,8 @@ void AI::unstick(const float &dt)
 
 		}
 	}
-	if (stickTime < 0.0f)
-		stickTime = 0.0f;
+	if (stickTime < -3.0f)
+		stickTime = -3.0f;
 	else if (stickTime > 8.0f)
 	{
 		stickTime = 8.0f;
