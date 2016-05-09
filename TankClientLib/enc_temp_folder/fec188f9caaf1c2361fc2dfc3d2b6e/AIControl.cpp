@@ -293,7 +293,6 @@ void AI::targetLocMove()
 
 			if (numSeen > 0)
 				moveState = ACTIVE;
-			search(startLoc);
 			break;
 		}
 	}
