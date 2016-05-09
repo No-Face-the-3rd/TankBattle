@@ -25,7 +25,7 @@ void AI::update(tankNet::TankBattleStateData state, float deltaTime)
 	checkSeen(deltaTime);
 	checkUpdated(deltaTime);
 
-	targetLocMove();
+	targetLocMove(deltaTime);
 
 	turning = checkTurn();
 	forward = checkForward();
@@ -214,7 +214,7 @@ void AI::checkUpdated(const float & dt)
 		}
 }
 
-void AI::targetLocMove()
+void AI::targetLocMove(const float &dt)
 {
 	if (!curState.tacticoolCount)
 	{
@@ -274,7 +274,7 @@ void AI::targetLocMove()
 					startLoc[i] = curState.position[i];
 				startLoc[1] = 0.0f;
 			}
-			search(startLoc);
+			search(startLoc, dt);
 			if (curState.tacticoolCount)
 				moveState = ACTIVE;
 			break;
@@ -293,7 +293,7 @@ void AI::targetLocMove()
 
 			if (numSeen > 0)
 				moveState = ACTIVE;
-			search(startLoc);
+			search(startLoc, dt);
 			break;
 		}
 	}
@@ -301,7 +301,7 @@ void AI::targetLocMove()
 
 }
 
-void AI::search(float start[3])
+void AI::search(float start[3], const float &dt)
 {
 	float tmp[3],tmpAngle;
 	getDir( start, curState.position, tmp);
@@ -319,13 +319,15 @@ void AI::search(float start[3])
 	targetLoc[0] = aimTarget[0] = start[0] + (4.0f + mag(tmp)) * std::cos(tmpAngle);
 	targetLoc[2] = aimTarget[0] = start[2] + (4.0f + mag(tmp)) * std::sin(tmpAngle);
 
-	if (mag(tmp) >= 27.0f)
+	if (mag(tmp) >= 27.0f || searchTime >= 8.0f)
 	{
 		for (int i = 0; i < 3;i++)
 			startLoc[i] = curState.position[i];
 		startLoc[1] = 0.0f;
 		clockwise = !clockwise;
+		searchTime = 0.0f;
 	}
+	searchTime += dt;
 }
 
 void AI::aim()
@@ -378,8 +380,6 @@ void AI::unstick(const float &dt)
 		stickTime = 8.0f;
 		formerStickTime = 7.0f;
 	}
-	if (stickTime > 4.0f && unstickSeen)
-		stickTime = 6.0f;
 	if (stickTime < formerStickTime && stickTime < 4.0f)
 		unstickSeen = false;
 

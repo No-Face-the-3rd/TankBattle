@@ -28,6 +28,7 @@ struct AI
 	bool clockwise = false;
 	float stickTime, formerStickTime;
 	bool unstickSeen;
+	float searchTime;
 
 	float tmpOut;
 
@@ -41,8 +42,8 @@ struct AI
 	void comReset();
 	void checkSeen(const float &dt);
 	void checkUpdated(const float &dt);
-	void targetLocMove();
-	void search(float start[3]);
+	void targetLocMove(const float &dt);
+	void search(float start[3], const float &dt);
 	void aim();
 	void avoid();
 	void unstick(const float &dt);
