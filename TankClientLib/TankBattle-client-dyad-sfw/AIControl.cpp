@@ -179,6 +179,11 @@ void AI::checkSeen(const float & dt)
 			if (curState.tacticoolData[i].inSight)
 			{
 				lastSeenTime.at(i) = 0.0f;
+				if (!unstickSeen)
+				{
+					unstickSeen = true;
+					stickTime = 0.0f;
+				}
 			}
 			else
 				lastSeenTime.at(i) += dt;
@@ -254,6 +259,12 @@ void AI::targetLocMove()
 				targetLoc[i] = aimTarget[i] = curState.position[i];
 		targetLoc[1] = aimTarget[1] = 0.0f;
 	}
+	int numSeen = 0;
+	for (int i = 0; i < lastSeenTime.size(); i++)
+	{
+		if (lastSeenTime.at(i) <= FLT_EPSILON)
+			numSeen++;
+	}
 		switch (moveState)
 		{
 		case SEARCH:
@@ -268,9 +279,20 @@ void AI::targetLocMove()
 				moveState = ACTIVE;
 			break;
 		case ACTIVE:
+			if (numSeen == 0)
+				moveState = FIND;
 
 			break;
 		case FIND:
+			if (prevMoveState != FIND)
+			{
+				for (int i = 0; i < 3; i++)
+					startLoc[i] = targetLoc[i];
+				startLoc[1] = 0.0f;
+			}
+
+			if (numSeen > 0)
+				moveState = ACTIVE;
 			break;
 		}
 	}
@@ -355,8 +377,12 @@ void AI::unstick(const float &dt)
 		stickTime = 8.0f;
 		formerStickTime = 7.0f;
 	}
-	formerStickTime = stickTime;
+	if (stickTime > 4.0f && unstickSeen)
+		stickTime = 6.0f;
+	if (stickTime < formerStickTime && stickTime < 4.0f)
+		unstickSeen = false;
 
+	formerStickTime = stickTime;
 }
 
 float getAngle(float dir[3])

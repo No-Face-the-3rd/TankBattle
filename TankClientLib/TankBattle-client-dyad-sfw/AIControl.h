@@ -27,6 +27,7 @@ struct AI
 	moveState moveState = ABYSS, prevMoveState = ABYSS;
 	bool clockwise = false;
 	float stickTime, formerStickTime;
+	bool unstickSeen;
 
 	float tmpOut;
 

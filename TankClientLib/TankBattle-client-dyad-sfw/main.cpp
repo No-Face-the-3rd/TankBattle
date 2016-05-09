@@ -47,8 +47,8 @@ int main(int argc, char** argv)
     //char *serverIPAddress = "";
 	//char *serverIPAddress = "10.15.22.46"; //tung
 	//char *serverIPAddress = "10.15.22.138"; //connor
-	//char *serverIPAddress = "10.15.22.73"; //screen
-	char *serverIPAddress = "10.15.22.31"; //?
+	char *serverIPAddress = "10.15.22.73"; //screen
+	//char *serverIPAddress = "10.15.22.31"; //?
 	//char *serverIPAddress = "10.15.22.10"; //matt
 	//char *serverIPAddress = "10.15.22.76"; //terry tmp
 
